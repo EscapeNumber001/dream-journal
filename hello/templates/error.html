@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<html>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+    <body>
+        {% include 'navbar.html' %}
+
+        <h1>An error occurred:</h1>
+        <p>{{ errortext }}</p>
+        <a href="{{ nextpage }}">Back to previous page</a>
+    </body>
+</html>

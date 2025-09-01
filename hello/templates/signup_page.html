@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <!-- base.html -->
+        {% load static %}
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" >   
+    </head>
+
+    <body>
+        {% include 'navbar.html' %}
+
+        <h1>Register</h1>
+        <form action="{% url 'finishsignup' %}" method="post">
+            {% csrf_token %}
+            <input type="text" placeholder="Username" name="username"/>
+            <input type="password" placeholder="Password" name="password"/>
+            <input type="submit"/>
+        </form>
+    </body>
+</html>

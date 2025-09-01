@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <!-- base.html -->
+        {% load static %}
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" >   
+    </head>
+
+    <body>
+        {% include 'navbar.html' %}
+        <form action="{% url 'applysettings' %}" enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <input type="checkbox" name="secretentries">Show secret entries</input>
+            <div id="passwordfield" hidden>
+                Password verification&nbsp;<input type="password" name="enablesecretspassword"/>
+            </div><br/>
+            <a href="{% url 'dataexport' %}">Export</a>
+            &nbsp; Import: <input type="file" name="importedfile">
+            <br/><br/><input type="submit" value="Save">
+        </form>
+    </body>
+
+    <script>
+        const checkbox = document.getElementsByName("secretentries")[0]
+        const passdiv = document.getElementById("passwordfield")
+        function changePasswordFieldState()
+        {
+            if (checkbox.checked === true)
+                passdiv.hidden = false
+            else
+                passdiv.hidden = true
+        }
+        checkbox.addEventListener("click", changePasswordFieldState)
+    </script>
+</html>

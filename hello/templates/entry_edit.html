@@ -1,0 +1,18 @@
+<html>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+    <head>
+        <title>Edit entry</title>
+    </head>
+
+    <body>
+        {% include 'navbar.html' %}
+        <h1>Edit entry</h1>
+        <form action="{% url 'entry_edit' pk %}" method="post">
+            {% csrf_token %}
+            {% include 'entry_addandedit_fields.html' %}
+            <input type="submit"/>
+        </form>
+    </body>
+</html>

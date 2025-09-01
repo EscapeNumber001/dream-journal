@@ -1,0 +1,60 @@
+<html>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+    {% include 'navbar.html' %}
+
+    <head>
+        <title>{{ entry.entry_title }}</title>
+    </head>
+
+    <body>
+        <a href="/"><== Back</a>
+        <h1> 
+            {% if entry.is_secret %}
+                <small>🔐</small>
+            {% endif %}
+            {{ entry.entry_title }} 
+        </h1>
+        <p>
+            {{ entry.entry_text|safe }}
+        </p>
+
+        <!-- Hidden delete form -->
+        <form id="deleteForm" method="post" action="{% url 'entry_delete' entry.pk %}" style="display:none;">
+            {% csrf_token %}
+        </form>
+
+        <footer>
+            {% load tz %}
+            {% localtime %}
+            <i style="color: palegreen">Written on {{ entry.creation_datetime }} {{ timezone }}</i>
+            {% if entry.last_edit_datetime is not None %}
+                &nbsp; <i><small>Last edited on {{ entry.last_edit_datetime }} {{ timezone }}</i></small>
+            {% endif %}
+            {% endlocaltime %}
+            <br/><br/><small><button id="editBtn">Edit Entry</a></small>
+            <small><button id="confirmDeleteBtn">Delete Entry!</a></small>
+        </footer>
+    </body>
+    <script>
+        function confirmDelete()
+        {
+            r = confirm("Are you sure you want to delete this entry permanently?")
+            if (r)
+            {
+                document.getElementById("deleteForm").submit();
+            }
+        }
+        const delBtn = document.getElementById("confirmDeleteBtn")
+        delBtn.addEventListener("click", confirmDelete)
+
+        function edit()
+        {
+            window.location.href = "{{ entry.pk }}/edit"
+        }
+        const editBtn = document.getElementById("editBtn")
+        editBtn.addEventListener("click", edit)
+
+    </script>
+</html>

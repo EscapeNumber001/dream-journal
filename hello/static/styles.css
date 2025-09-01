@@ -1,0 +1,72 @@
+html {
+    background: linear-gradient(.25turn, hsl(271, 51%, 10.5%), 25%, hsl(271, 51%, 14%), hsl(271, 51%, 10.5%));
+    color: rgb(223, 192, 253);
+    text-shadow: 1.25px 1.25px 1.25px purple;
+    font-family: Tahoma, Arial, Helvetica, sans-serif;;
+}
+
+body {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+#homelink {
+    color: orange;
+    text-shadow: 3px 3px 3px orangered;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-decoration: none;
+}
+
+h1 {
+    color: orange;
+    text-shadow: 1px 1px 1px orangered;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+a {
+    color: hsl(84, 100%, 30%);
+    text-shadow: 1px 1px 1px green;
+}
+
+
+button {
+    text-decoration: strong;
+    background-color: lightgreen;
+    border-radius: 3px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: greenyellow;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+#secretwarning {
+    color: darkgray;
+    text-shadow: none;
+}
+
+.navbar-item {
+    margin-right: 15px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#confirmDeleteBtn {
+    background-color: palevioletred;
+    border-color:rgb(255, 95, 95);
+}
+
+input, select, textarea {
+    font-family: Arial, Helvetica, sans-serif;
+    border-width: 3px;
+    border-color: rgb(159, 116, 200);
+    background: rgb(53, 0, 53);
+    color: lavender;
+    border-radius: 5px;
+    overflow: auto;
+    border-style: groove;
+}
+
+textarea {
+    border-style: inset;
+}

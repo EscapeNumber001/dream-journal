@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <!-- base.html -->
+        {% load static %}
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" >   
+    </head>
+
+    <body>
+        {% include 'navbar.html' %}
+        {% for e in all_entries %}
+            <p>
+            <a href="entry/{{ e.pk }}"><h2>
+                {% if e.is_secret %}
+                    <small>🔐</small>
+                {% endif %}
+                {{ e.entry_title }}
+            </h2></a>
+            {{ e.entry_text|truncatechars_html:2000|safe }}<br/>
+            <small>{{ e.creation_datetime }}</small>
+            </p>
+        {% endfor %}
+
+        <div class="pagination">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}<br/>
+            {% if page_obj.has_previous %}
+                <a href="?page_num=1">First</a>
+                <a href="?page_num={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page_num={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page_num={{ page_obj.paginator.num_pages }}">Last</a>
+            {% endif %}
+        </div>
+    </body>
+</html>

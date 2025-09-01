@@ -1,0 +1,13 @@
+To-do
+- Split entries in index.html and search.html into tabs (preferably 200 entries/page)
+    * index.html done
+    * search.html
+
+2025-08-16 2025-08-16 User clicks an export button, and a .json/.csv file is generated +DataExport
+2025-08-16 2025-08-16 User clicks an import button, uploads a .json/.csv, and it is added to the database +DataImport
+
+2025-08-16 Document list of dependencies +CodeMaintenance
+
+
+DONE
+- Add a sorting dropdown to index.html and search.html
