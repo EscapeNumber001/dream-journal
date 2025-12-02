@@ -69,11 +69,16 @@ def _count_words(text: str) -> int:
 
 
 # Views
-@login_required
 def home(request):
+    return render(request, "index.html")
+
+
+@login_required
+def entry_list(request):
     orderby = "creation_datetime"
     direction = "-"
     page_num = 1
+    search_query = ""
 
     if "sort_direction" in request.GET:
         direction = SORTING_DIRECTIONS.get(request.GET["sort_direction"])
@@ -83,17 +88,22 @@ def home(request):
     
     if "page_num" in request.GET:
         page_num = int(request.GET["page_num"])
+
+    if "q" in request.GET:
+        search_query = request.GET["q"]
     
     orderby = direction + orderby
 
-    all_entries = Entry.objects.filter(owner__exact=request.user).order_by(orderby)
+    all_entries = Entry.objects.filter(owner__exact=request.user)\
+        .filter(entry_text__icontains=search_query)\
+        .order_by(orderby)
     secret_entries_enabled = request.session.get('secretentries', False)
     if not secret_entries_enabled:
         all_entries = all_entries.filter(is_secret__exact=False)
     p = Paginator(all_entries, 200)
     page_obj = p.get_page(page_num)
 
-    return render(request, "index.html", {'all_entries': p.page(page_num), 'page_obj': page_obj} )
+    return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj} )
 
 
 @login_required
@@ -221,29 +231,6 @@ def applysettings(request):
             return render(request, "error.html", {'errortext': "JSON file does not appear to be a journal export.", 'nextpage': '/settings'}, status=400)
 
     return HttpResponseRedirect("/")
-
-
-@login_required
-def search_page(request):
-    orderby = "creation_datetime"
-    direction = "-"
-
-    if "sort_direction" in request.GET:
-        direction = SORTING_DIRECTIONS.get(request.GET["sort_direction"])
-
-    if "sort_by" in request.GET:
-        orderby = SORTING_METHODS.get(request.GET["sort_by"])
-
-    orderby = direction + orderby
-
-    searchq = request.GET["searchbox"]
-    filtered_entries = Entry.objects.filter(owner__exact=request.user)\
-        .order_by(orderby)\
-        .filter(entry_text__contains=searchq)
-    secret_entries_enabled = request.session.get('secretentries', False)
-    if not secret_entries_enabled:
-        filtered_entries = filtered_entries.filter(is_secret__exact=False)
-    return render(request, "search.html", {'filtered_entries': filtered_entries, 'searchq': searchq} )
 
 
 def signup_page(request):

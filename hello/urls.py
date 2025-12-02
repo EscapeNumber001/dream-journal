@@ -14,7 +14,7 @@ urlpatterns = [
     path('settings', views.settings_page, name="settings_page"),
     path('applysettings', views.applysettings, name="applysettings"),
 
-    path('search', views.search_page, name="search_page"),
+    path('entry_list', views.entry_list, name="entry_list"),
     path('signup', views.signup_page, name="signup_page"),
     path('finishsignup', views.finishsignup, name="finishsignup"),
 

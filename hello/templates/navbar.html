@@ -14,8 +14,8 @@
 <a class="navbar-item" href="/settings">Settings</a>
 <a class="navbar-item" href="/logout_page">Logout</a>
 <span class="navbar-item" style="color:white; text-shadow: none;">{{ request.user.username }}</span>
-<br/><form action="{% url 'search_page' %}" method="get">
-    <input class="navbar-item" name="searchbox" type="search" placeholder="Search..."/>
+<br/><form action="{% url 'entry_list' %}" method="get">
+    <input class="navbar-item" name="q" type="search" placeholder="Search..."/>
     <select class="navbar-item" name="sort_by" style="margin-right: 5px;">
         <option value="CreationDate">Creation Date</option>
         <option value="LastEditDate">Last Edited</option>
