@@ -89,6 +89,7 @@ def entry_list(request):
     if "page_num" in request.GET:
         page_num = int(request.GET["page_num"])
 
+    # FIXME: This may be vulnerable to XSS
     if "q" in request.GET:
         search_query = request.GET["q"]
     

@@ -9,6 +9,20 @@
 
     <body>
         {% include 'navbar.html' %}
+        <form action="{% url 'entry_list' %}" method="get">
+            <input class="navbar-item" name="q" type="search" placeholder="Search..." />
+            <select class="navbar-item" name="sort_by" style="margin-right: 5px;">
+                <option value="CreationDate">Creation Date</option>
+                <option value="LastEditDate">Last Edited</option>
+                <option value="WordCount">Word Count</option>
+            </select>
+            <select class="navbar-item" name="sort_direction" style="margin-right: 5px;">
+                <option value="Descending">⬇️</option>
+                <option value="Ascending">⬆️</option>
+            </select>
+            <input type="submit" style="margin-left:0px;">
+        </form>
+        
         {% for e in all_entries %}
             <p>
             <a href="entry/{{ e.pk }}"><h2>
