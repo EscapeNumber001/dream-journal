@@ -3,5 +3,6 @@
 2025-08-16 Document list of dependencies +CodeMaintenance
 2025-12-02 2025-12-02 Combine functionality of index.html and search.html / remove duplicate code +Search
 2025-12-02 2025-12-02 Move search bar out of navbar and only put it in entry_list.html +Search
-2025-12-02 Use Django forms instead of direct POST access for search params
-2025-12-02 When the user conducts a search, carry over params such as sort dir. and criteria +Search
+2025-12-02 2025-12-02 Use Django forms instead of direct POST access for search params
+2025-12-02 2025-12-02 When the user conducts a search, carry over params such as sort dir. and criteria +Search
+2025-12-02 Clean up search code in views.py to use Django initial values instead of hardcoding

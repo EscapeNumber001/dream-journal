@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout, models
 from django.core.paginator import Paginator
 from django.core.files import File
 
-from .forms import AddOrEditEntryForm
+from .forms import AddOrEditEntryForm, EntrySearchForm
 from .models import Entry
 from mysite import settings
 
@@ -20,11 +20,6 @@ SORTING_METHODS = {
     "CreationDate": "creation_datetime",
     "LastEditDate": "last_edit_datetime",
     "WordCount": "entry_text_wordcount",
-}
-
-SORTING_DIRECTIONS = {
-    "Descending": "-",
-    "Ascending": "",
 }
 
 # Helper functions
@@ -75,36 +70,34 @@ def home(request):
 
 @login_required
 def entry_list(request):
-    orderby = "creation_datetime"
-    direction = "-"
+    sort_by = "creation_datetime"
+    sort_dir = "-"
     page_num = 1
     search_query = ""
 
-    if "sort_direction" in request.GET:
-        direction = SORTING_DIRECTIONS.get(request.GET["sort_direction"])
+    searchf = EntrySearchForm(request.GET)
 
-    if "sort_by" in request.GET:
-        orderby = SORTING_METHODS.get(request.GET["sort_by"])
-    
-    if "page_num" in request.GET:
-        page_num = int(request.GET["page_num"])
+    if searchf.is_valid():
+        search_query = searchf.cleaned_data["query_text"]
+        sort_dir = searchf.cleaned_data["sort_dir"]
 
-    # FIXME: This may be vulnerable to XSS
-    if "q" in request.GET:
-        search_query = request.GET["q"]
-    
-    orderby = direction + orderby
+        if searchf.cleaned_data["sort_by"] != "":
+            sort_by = sort_dir + searchf.cleaned_data["sort_by"]
+        else:
+            sort_by = sort_dir + "creation_datetime"
+        print(sort_by)
+
 
     all_entries = Entry.objects.filter(owner__exact=request.user)\
         .filter(entry_text__icontains=search_query)\
-        .order_by(orderby)
+        .order_by(sort_by)
     secret_entries_enabled = request.session.get('secretentries', False)
     if not secret_entries_enabled:
         all_entries = all_entries.filter(is_secret__exact=False)
     p = Paginator(all_entries, 200)
     page_obj = p.get_page(page_num)
 
-    return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj} )
+    return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj, 'search_form': searchf} )
 
 
 @login_required
