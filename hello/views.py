@@ -71,15 +71,17 @@ def home(request):
 @login_required
 def entry_list(request):
     sort_by = "creation_datetime"
-    sort_dir = "-"
     page_num = 1
     search_query = ""
+
+    if "page_num" in request.GET and request.GET["page_num"] != "":
+        page_num = request.GET["page_num"]
 
     searchf = EntrySearchForm(request.GET)
 
     if searchf.is_valid():
         search_query = searchf.cleaned_data["query_text"]
-        sort_dir = searchf.cleaned_data["sort_dir"]
+        sort_dir = "-" if searchf.cleaned_data["sort_dir"] == "desc" else ""
 
         if searchf.cleaned_data["sort_by"] != "":
             sort_by = sort_dir + searchf.cleaned_data["sort_by"]
@@ -94,7 +96,7 @@ def entry_list(request):
     secret_entries_enabled = request.session.get('secretentries', False)
     if not secret_entries_enabled:
         all_entries = all_entries.filter(is_secret__exact=False)
-    p = Paginator(all_entries, 200)
+    p = Paginator(all_entries, 10)
     page_obj = p.get_page(page_num)
 
     return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj, 'search_form': searchf} )

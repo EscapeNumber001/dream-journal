@@ -10,8 +10,9 @@
     <body>
         {% include 'navbar.html' %}
 
-        <form action="{% url 'entry_list' %}" method="get">
+        <form action="{% url 'entry_list' %}" method="get" name="html_search_form">
             {{ search_form }}
+            <input hidden type="number" name="page_num">
             <input type="submit" style="margin-left:0px;">
         </form>
 
@@ -31,14 +32,14 @@
         <div class="pagination">
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}<br/>
             {% if page_obj.has_previous %}
-                <a href="?page_num=1">First</a>
-                <a href="?page_num={{ page_obj.previous_page_number }}">Previous</a>
+                <a href="{% querystring page_num=1 %}">First</a>
+                <a href="{% querystring page_num=page_obj.previous_page_number %}">Previous</a>
             {% endif %}
             {% if page_obj.has_next %}
-                <a href="?page_num={{ page_obj.next_page_number }}">Next</a>
+                <a href="{% querystring page_num=page_obj.next_page_number %}">Next</a>
             {% endif %}
             {% if page_obj.has_next %}
-                <a href="?page_num={{ page_obj.paginator.num_pages }}">Last</a>
+                <a href="{% querystring page_num=page_obj.paginator.num_pages %}">Last</a>
             {% endif %}
         </div>
     </body>

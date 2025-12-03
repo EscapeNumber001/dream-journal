@@ -8,8 +8,8 @@ SORTING_METHODS = {
 }
 
 SORTING_DIRECTIONS = {
-    "-": "Descending",
-    "": "Ascending",
+    "desc": "Descending",
+    "asc": "Ascending",
 }
 
 class AddOrEditEntryForm(forms.ModelForm):
@@ -24,4 +24,4 @@ class AddOrEditEntryForm(forms.ModelForm):
 class EntrySearchForm(forms.Form):
     query_text = forms.CharField(label="Search...", required=False)
     sort_by = forms.ChoiceField(label="Sort by", choices=SORTING_METHODS, initial=SORTING_METHODS["creation_datetime"], required=False)
-    sort_dir = forms.ChoiceField(label="Direction", choices=SORTING_DIRECTIONS, initial=SORTING_DIRECTIONS["-"], required=False)
+    sort_dir = forms.ChoiceField(label="Direction", choices=SORTING_DIRECTIONS, initial=SORTING_DIRECTIONS, required=False)
