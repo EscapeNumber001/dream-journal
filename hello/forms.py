@@ -4,7 +4,7 @@ from .models import Entry
 SORTING_METHODS = {
     "creation_datetime": "Creation Date",
     "last_edit_datetime": "Last Edited",
-    "entry_text_wordcount": "Word Count",
+    "wordcount": "Word Count",
 }
 
 SORTING_DIRECTIONS = {

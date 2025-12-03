@@ -8,19 +8,13 @@ from django.contrib.auth import authenticate, login, logout, models
 from django.core.paginator import Paginator
 from django.core.files import File
 
-from .forms import AddOrEditEntryForm, EntrySearchForm
+from .forms import AddOrEditEntryForm, EntrySearchForm, SORTING_METHODS
 from .models import Entry
 from mysite import settings
 
 from markdownify import markdownify as mdf
 import markdown
 import bleach
-
-SORTING_METHODS = {
-    "CreationDate": "creation_datetime",
-    "LastEditDate": "last_edit_datetime",
-    "WordCount": "entry_text_wordcount",
-}
 
 # Helper functions
 def _verify_entry_user(request, e):
@@ -54,13 +48,7 @@ def _perform_entry_addoredit(request, form, entry_pk=-1):
 # Not a very important issue right now since this only causes a loss of
 # one word per newline.
 def _count_words(text: str) -> int:
-    if len(text) == 0:
-        return 0
-    wordcount = 1
-    for chr in text:
-        if chr == ' ':
-            wordcount += 1
-    return wordcount
+    return len(text.split(" "))
 
 
 # Views
@@ -77,18 +65,18 @@ def entry_list(request):
     if "page_num" in request.GET and request.GET["page_num"] != "":
         page_num = request.GET["page_num"]
 
-    searchf = EntrySearchForm(request.GET)
+    search_form = EntrySearchForm(request.GET)
 
-    if searchf.is_valid():
-        search_query = searchf.cleaned_data["query_text"]
-        sort_dir = "-" if searchf.cleaned_data["sort_dir"] == "desc" else ""
+    if search_form.is_valid():
+        search_query = search_form.cleaned_data["query_text"]
+        sort_dir = "" if search_form.cleaned_data["sort_dir"] == "asc" else "-"
 
-        if searchf.cleaned_data["sort_by"] != "":
-            sort_by = sort_dir + searchf.cleaned_data["sort_by"]
+        # Although we're accessing the field names directly, this should be safe because
+        # it is restricted to only the fields in the SORTING_METHODS dict in forms.py.
+        if search_form.cleaned_data["sort_by"] != "":
+            sort_by = sort_dir + search_form.cleaned_data["sort_by"]
         else:
             sort_by = sort_dir + "creation_datetime"
-        print(sort_by)
-
 
     all_entries = Entry.objects.filter(owner__exact=request.user)\
         .filter(entry_text__icontains=search_query)\
@@ -99,7 +87,7 @@ def entry_list(request):
     p = Paginator(all_entries, 10)
     page_obj = p.get_page(page_num)
 
-    return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj, 'search_form': searchf} )
+    return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj, 'search_form': search_form} )
 
 
 @login_required
@@ -264,13 +252,6 @@ def dataexport(request):
         entry_js["entry_title"] = entry.entry_title
         entry_js["entry_text"] = entry.entry_text
         entry_js["is_secret"] = entry.is_secret
-
-        # writer.writerow([str(entry.creation_datetime),
-        # (str(entry.last_edit_datetime) if entry.last_edit_datetime is not None else ""),
-        # entry.entry_title + ",",
-        # mdf(entry.entry_text).replace("\n", "\\n"),
-        # ("yes" if entry.is_secret else "no"),
-        # ])
     
     outstr = json.dumps(root)
     response.content = outstr
