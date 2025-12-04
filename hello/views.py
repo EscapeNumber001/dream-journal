@@ -12,7 +12,7 @@ from .forms import AddOrEditEntryForm, EntrySearchForm, SORTING_METHODS
 from .models import Entry
 from mysite import settings
 
-from markdownify import markdownify as mdf
+#from markdownify import markdownify as mdf
 import markdown
 import bleach
 
@@ -93,14 +93,11 @@ def detail(request, req_pk):
     if not _verify_entry_user(request, entry):
         return HttpResponse("You are forbidden from viewing this page.", status=403)
 
-    formatted_entrytext = markdown.markdown(entry.entry_text)
-
     return render(
         request=request, 
         template_name="entry_detail.html", 
         context={
             'entry': entry,
-            'formatted_entrytext': formatted_entrytext,
             'timezone': settings.TIME_ZONE
         }
     )
