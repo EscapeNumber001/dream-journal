@@ -30,11 +30,7 @@ def _perform_entry_addoredit(request, form, entry_pk=-1):
 
     e.entry_title = form.cleaned_data["entry_title"]
     e.is_secret = form.cleaned_data["is_secret"]
-    e.entry_text = markdown.markdown(
-        bleach.clean(
-            form.cleaned_data["entry_text"]
-        )
-    )
+    e.entry_text = bleach.clean(form.cleaned_data["entry_text"])
     e.entry_text_wordcount = _count_words(e.entry_text)
     e.creation_datetime = form.cleaned_data["creation_datetime"]
     if not is_new_entry:
@@ -84,7 +80,7 @@ def entry_list(request):
     secret_entries_enabled = request.session.get('secretentries', False)
     if not secret_entries_enabled:
         all_entries = all_entries.filter(is_secret__exact=False)
-    p = Paginator(all_entries, 10)
+    p = Paginator(all_entries, 50)
     page_obj = p.get_page(page_num)
 
     return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj, 'search_form': search_form} )
@@ -93,14 +89,18 @@ def entry_list(request):
 @login_required
 def detail(request, req_pk):
     entry = get_object_or_404(klass=Entry, pk=req_pk)
+
     if not _verify_entry_user(request, entry):
         return HttpResponse("You are forbidden from viewing this page.", status=403)
+
+    formatted_entrytext = markdown.markdown(entry.entry_text)
 
     return render(
         request=request, 
         template_name="entry_detail.html", 
         context={
             'entry': entry,
+            'formatted_entrytext': formatted_entrytext,
             'timezone': settings.TIME_ZONE
         }
     )
@@ -145,7 +145,7 @@ def entry_edit(request, req_pk):
         form = AddOrEditEntryForm(
             instance=entry, 
             initial={
-                "entry_text": mdf(entry.entry_text)
+                "entry_text": entry.entry_text
                 }
             )
     return render(request=request, template_name="entry_edit.html", context={'pk': req_pk, 'form': form})

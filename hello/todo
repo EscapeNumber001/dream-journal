@@ -8,3 +8,4 @@
 2025-12-02 Clean up search code in views.py to use Django initial values instead of hardcoding
 2025-12-02 Design a better-looking logo +Frontend
 2025-12-02 Revise the color scheme and CSS in general +Frontend
+2025-12-04 Store entries in plaintext/markdown format on backend, only converting to HTML when rendering

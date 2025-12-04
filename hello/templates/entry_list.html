@@ -23,7 +23,8 @@
                 {% endif %}
                 {{ e.entry_title }}
             </h2></a>
-            {{ e.entry_text|truncatechars_html:2000|safe }}<br/>
+            {% load markdown_wrapper %}
+            {{ e.entry_text|truncatechars_html:2000|markdown2html }}<br/>
             <small>{{ e.creation_datetime }}</small>
             </p>
         {% endfor %}
