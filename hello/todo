@@ -9,9 +9,9 @@
 2025-12-02 Design a better-looking logo +Frontend
 2025-12-02 Revise the color scheme and CSS in general +Frontend
 2025-12-04 2025-12-04 Store entries in plaintext/markdown format on backend, only converting to HTML when rendering
-2025-12-04 Importing a backup file should ask the user if they wish to delete all existing entries or merge the file as-is +Backup
-2025-12-04 When importing a backup file duplicate entries should always be avoided +Backup
-2025-12-21 Make date/time selection on entry creation more streamlined
-2025-12-21 Validate timestamps on imported entries
+2025-12-04 Importing a backup file should ask the user if they wish to delete all existing entries or merge the file as-is +Backup   -- ON HOLD
+2025-12-04 2025-12-21 When importing a backup file duplicate entries should always be avoided +Backup
+2025-12-21 2025-12-21 Make date/time selection on entry creation more streamlined
+2025-12-21 2025-12-21 Validate timestamps on imported entries
 2025-12-21 /dataexport view should require the user to be logged in +Bug +MinorBug
 2025-12-21 /handle_login should have the "@require_POST" annotation

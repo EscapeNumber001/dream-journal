@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, models
 from django.core.paginator import Paginator
 from django.core.files import File
+from django.db import transaction
+from django.utils.dateparse import parse_datetime
 
 from .forms import AddOrEditEntryForm, EntrySearchForm, SORTING_METHODS
 from .models import Entry
@@ -193,27 +195,39 @@ def applysettings(request):
         data = ""
         for filename in request.FILES:
             f = request.FILES[filename]
-            print("Received file " + f.name)
+            print("[INFO][JSON_EntryImport] Received file " + f.name)
             data = f.read()
 
         try:
             myjs = json.loads(data)
+            imported_entries = []
             for key in myjs:
                 e = Entry()
                 entrydata = myjs[key]
 
+                # FIXME: These should be casted to a datetime instead of remaining a str.
+                #        Raw str works for now but might cause weird issues with Django
                 e.creation_datetime = entrydata["creation_datetime"]
                 e.last_edit_datetime = entrydata["last_edit_datetime"] if entrydata["last_edit_datetime"] != "None" else None
+
                 e.entry_title = entrydata["entry_title"]
                 e.entry_text = entrydata["entry_text"]
                 e.is_secret = entrydata["is_secret"]
                 e.owner = request.user
-                e.save()
+                imported_entries.append(e)
         except json.JSONDecodeError as e:
+            print("[ERROR][JSON_EntryImport] Malformed JSON; cancelling import")
             return errorpage(request, "Error processing import: malformed JSON file", nextpage="/settings")
         except (TypeError, KeyError) as e:
+            print("[ERROR][JSON_EntryImport] JSON file does not appear to be a dream journal export; cancelling import")
             return errorpage(request, "Error processing import: this JSON file does not contain recognizable entry data", nextpage="/settings")
-            
+    
+    with transaction.atomic():
+        Entry.objects.all().filter(owner=request.user).delete()
+        x = Entry.objects.bulk_create(imported_entries)
+        num_created = len(x)
+
+    print(f"[INFO][JSON_EntryImport] Successfully imported {num_created-1} entries from JSON.")
     return HttpResponseRedirect("/")
 
 
@@ -247,8 +261,8 @@ def dataexport(request):
     for entry in all_entries:
         root[entry.pk] = dict()
         entry_js = root[entry.pk]
-        entry_js["creation_datetime"] = str(entry.creation_datetime)
-        entry_js["last_edit_datetime"] = str(entry.last_edit_datetime)
+        entry_js["creation_datetime"] = parse_datetime(entry.creation_datetime)
+        entry_js["last_edit_datetime"] = parse_datetime(entry.last_edit_datetime)
         entry_js["entry_title"] = entry.entry_title
         entry_js["entry_text"] = entry.entry_text
         entry_js["is_secret"] = entry.is_secret
