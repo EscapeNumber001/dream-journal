@@ -13,5 +13,5 @@
 2025-12-04 2025-12-21 When importing a backup file duplicate entries should always be avoided +Backup
 2025-12-21 2025-12-21 Make date/time selection on entry creation more streamlined
 2025-12-21 2025-12-21 Validate timestamps on imported entries
-2025-12-21 /dataexport view should require the user to be logged in +Bug +MinorBug
-2025-12-21 /handle_login should have the "@require_POST" annotation
+2025-12-21 2025-12-21 /dataexport view should require the user to be logged in +Bug +MinorBug
+2025-12-21 2025-12-21 /handle_login should have the "@require_POST" annotation

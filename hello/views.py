@@ -156,7 +156,7 @@ def entry_edit(request, req_pk):
 def login_page(request):
     return render(request, "login.html")
 
-
+@require_POST
 def handle_login(request):
     username = request.POST["username_input"]
     password = request.POST["password_input"]
@@ -220,6 +220,7 @@ def applysettings(request):
             return errorpage(request, "Error processing import: malformed JSON file", nextpage="/settings")
         except (TypeError, KeyError) as e:
             print("[ERROR][JSON_EntryImport] JSON file does not appear to be a dream journal export; cancelling import")
+            print(str(e))
             return errorpage(request, "Error processing import: this JSON file does not contain recognizable entry data", nextpage="/settings")
     
     with transaction.atomic():
@@ -248,7 +249,7 @@ def finishsignup(request):
     login(request, new_user)
     return HttpResponseRedirect("/")
 
-
+@login_required
 def dataexport(request):
     all_entries = Entry.objects.all().filter(owner__exact=request.user).order_by("creation_datetime")
 
@@ -261,8 +262,8 @@ def dataexport(request):
     for entry in all_entries:
         root[entry.pk] = dict()
         entry_js = root[entry.pk]
-        entry_js["creation_datetime"] = parse_datetime(entry.creation_datetime)
-        entry_js["last_edit_datetime"] = parse_datetime(entry.last_edit_datetime)
+        entry_js["creation_datetime"] = str(entry.creation_datetime)
+        entry_js["last_edit_datetime"] = str(entry.last_edit_datetime)
         entry_js["entry_title"] = entry.entry_title
         entry_js["entry_text"] = entry.entry_text
         entry_js["is_secret"] = entry.is_secret
