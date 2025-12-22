@@ -12,8 +12,6 @@ from .forms import AddOrEditEntryForm, EntrySearchForm, SORTING_METHODS
 from .models import Entry
 from mysite import settings
 
-#from markdownify import markdownify as mdf
-import markdown
 import bleach
 
 # Helper functions
@@ -45,6 +43,11 @@ def _perform_entry_addoredit(request, form, entry_pk=-1):
 # one word per newline.
 def _count_words(text: str) -> int:
     return len(text.split(" "))
+
+
+def errorpage(request, error_msg="An unidentified error occurred.", nextpage="/", status=400):
+    return render(request, "error.html", {'errortext': error_msg, 'nextpage': nextpage}, status=status)
+
 
 
 # Views
@@ -91,7 +94,7 @@ def detail(request, req_pk):
     entry = get_object_or_404(klass=Entry, pk=req_pk)
 
     if not _verify_entry_user(request, entry):
-        return HttpResponse("You are forbidden from viewing this page.", status=403)
+        return errorpage(request, "You are forbidden from viewing this page.", "/", status=403)
 
     return render(
         request=request, 
@@ -121,7 +124,7 @@ def entry_add(request):
 def entry_delete(request, req_pk):
     entry = get_object_or_404(klass=Entry, pk=req_pk)
     if not _verify_entry_user(request, entry):
-        return HttpResponse("You are forbidden from deleting this post.", status=403)
+        return errorpage(request, "You are forbidden from deleting this post.", "/", status=403)
     
     entry.delete()
     return HttpResponseRedirect("/")
@@ -131,7 +134,7 @@ def entry_delete(request, req_pk):
 def entry_edit(request, req_pk):
     entry = get_object_or_404(Entry, pk=req_pk)
     if not _verify_entry_user(request, entry):
-        return HttpResponse("You are forbidden from viewing this page.", status=403)
+        return errorpage(request, "You are forbidden from viewing this page.", "/", status=403)
 
     if request.method == "POST":
         form = AddOrEditEntryForm(request.POST)
@@ -207,10 +210,10 @@ def applysettings(request):
                 e.owner = request.user
                 e.save()
         except json.JSONDecodeError as e:
-            return render(request, "error.html", {'errortext': f"Import failed due to invalid JSON file: {str(e)}", 'nextpage': "/settings"}, status=400)
+            return errorpage(request, "Error processing import: malformed JSON file", nextpage="/settings")
         except (TypeError, KeyError) as e:
-            return render(request, "error.html", {'errortext': "JSON file does not appear to be a journal export.", 'nextpage': '/settings'}, status=400)
-
+            return errorpage(request, "Error processing import: this JSON file does not contain recognizable entry data", nextpage="/settings")
+            
     return HttpResponseRedirect("/")
 
 
@@ -222,12 +225,12 @@ def finishsignup(request):
     username = request.POST["username"]
     password = request.POST["password"]
     if len(models.User.objects.filter(username__exact=username)) > 0:
-        return HttpResponse("That username is already taken.")
+        return errorpage(request, "That username is already taken.", "/signup", 403)
 
     models.User.objects.create_user(username=username, email=None, password=password)
     new_user = authenticate(request, username=username, password=password)
     if not new_user:
-        return render(request, "error.html", {'errortext': '500 Internal Server Error: Something went wrong when creating the account.', 'nextpage': '/login'}, status=500)
+        return errorpage(request, "An internal server error occurred while creating the account.", "/signup", 503)
     login(request, new_user)
     return HttpResponseRedirect("/")
 

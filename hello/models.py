@@ -8,6 +8,7 @@ class Entry(models.Model):
     entry_text = models.CharField()
     entry_text_wordcount = models.PositiveIntegerField(default=1)
     tags = models.CharField(null=True, blank=True)  # A comma-separated list of tags
+                                                    # TODO: Actually implement this
     creation_datetime = models.DateTimeField()
     last_edit_datetime = models.DateTimeField(null=True, blank=True)
     is_secret = models.BooleanField(default=False)
