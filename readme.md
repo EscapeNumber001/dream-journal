@@ -4,7 +4,7 @@
 ## What it is
 This is a Django web application designed for a single user to keep a log of their dreams. This app was designed with the goals of privacy and simplicity in mind. Has proper multi-user support, and both exporting and importing of JSON files are supported.
 
-⚠️ **This application is not designed to be run on an Internet-facing server!** It is recommended to use a personal VPN such as [Tailscale](tailscale.com) to securely access your journal from remote networks.
+⚠️ **This application is not designed to be run on an Internet-facing server!** It is recommended to use a personal VPN such as [Tailscale](https://tailscale.com) to securely access your journal from remote networks.
 
 ## Running the application
 ### Dependencies
