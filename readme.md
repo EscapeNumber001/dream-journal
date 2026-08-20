@@ -37,7 +37,11 @@ All of the following packages can be installed below using `pip`:
 - markdownify
 - bleach
 
-`pip install django markdown markdownify bleach`
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+python3 manage.py migrate
+python3 manage.py runserver
 
 ### Execution
 ```bash
