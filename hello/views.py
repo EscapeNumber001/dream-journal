@@ -80,12 +80,10 @@ def entry_list(request):
         .filter(entry_text__icontains=search_query)\
         .order_by(sort_by)
     secret_entries_enabled = request.session.get('secretentries', False)
-    if not secret_entries_enabled:
-        all_entries = all_entries.filter(is_secret__exact=False)
     p = Paginator(all_entries, 50)
     page_obj = p.get_page(page_num)
 
-    return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj, 'search_form': search_form} )
+    return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj, 'search_form': search_form, 'secrets_enabled': secret_entries_enabled} )
 
 
 @login_required
@@ -220,12 +218,13 @@ def applysettings(request):
             print(str(e))
             return errorpage(request, "Error processing import: this JSON file does not contain recognizable entry data", nextpage="/settings")
     
-    with transaction.atomic():
-        Entry.objects.all().filter(owner=request.user).delete()
-        x = Entry.objects.bulk_create(imported_entries)
-        num_created = len(x)
+        with transaction.atomic():
+            Entry.objects.all().filter(owner=request.user).delete()
+            x = Entry.objects.bulk_create(imported_entries)
+            num_created = len(x)
 
-    print(f"[INFO][JSON_EntryImport] Successfully imported {num_created-1} entries from JSON.")
+        print(f"[INFO][JSON_EntryImport] Successfully imported {num_created-1} entries from JSON.")
+    
     return HttpResponseRedirect("/")
 
 

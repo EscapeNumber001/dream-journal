@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -19,17 +17,29 @@
     </form>
 
     {% for e in all_entries %}
-        <p>
-        <a href="entry/{{ e.pk }}"><h2>
-            {% if e.is_secret %}
-                <small>🔐</small>
-            {% endif %}
-            {{ e.entry_title }}
-        </h2></a>
-        {% load markdown_wrapper %}
-        {{ e.entry_text|truncatechars_html:2000|markdown2html }}<br/>
-        <small>{{ e.creation_datetime }}</small>
-        </p>
+      {% if not e.is_secret or secrets_enabled %}
+        <div class=entry>
+          <p>
+            <a href="entry/{{ e.pk }}"><h2>
+                {% if e.is_secret %}
+                    <small>🔐</small>
+                {% endif %}
+                {{ e.entry_title }}
+            </h2></a>
+            {% load markdown_wrapper %}
+
+            {{ e.entry_text|truncatechars_html:2000|markdown2html }}<br/>
+            <small>{{ e.creation_datetime }}</small>
+          </p>
+        </div>
+      {% else %}
+        <div class=blockedHiddenEntry>
+          <br/>
+          <h2 style="color: gray;">{{ e.entry_title }}</h2>
+          <p style="color: gray;"><i>Entry marked as secret. Go to Settings to enable viewing secret entries.</i></p>
+          <br/>
+        </div>
+      {% endif %}
     {% endfor %}
 
     <div class="pagination">
