@@ -40,11 +40,8 @@ def _perform_entry_addoredit(request, form, entry_pk=-1):
     return e.pk
 
 
-# BUG: This function doesn't count words immediately after a newline.
-# Not a very important issue right now since this only causes a loss of
-# one word per newline.
 def _count_words(text: str) -> int:
-    return len(text.split(" "))
+    return len(text.split())
 
 
 def errorpage(request, error_msg="An unidentified error occurred.", nextpage="/", status=400):
