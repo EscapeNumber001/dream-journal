@@ -1,18 +1,18 @@
-<html>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Entry</title>
+  </head>
 
-    <head>
-        <title>Add entry</title>
-    </head>
-
-    <body>
-        {% include 'navbar.html' %}
-        <form action="{% url 'entry_add' %}" method="post">
-            <h1>Add entry</h1>
-            {% csrf_token %}
-            {% include 'entry_addandedit_fields.html' %}
-            <input type="submit">
-        </form>
-    </body>
+  <body>
+    {% include 'navbar.html' %}
+    <form action="{% url 'entry_add' %}" method="post">
+        <h1>Add entry</h1>
+        {% csrf_token %}
+        {% include 'entry_addandedit_fields.html' %}
+        <input type="submit">
+    </form>
+  </body>
 </html>

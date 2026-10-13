@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 
-<html>
-    <head>
-        <!-- base.html -->
-        {% load static %}
-        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" >   
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign Up</title>
+  </head>
+  <body> 
+    {% include 'navbar.html' %}
 
-    <body>
-        {% include 'navbar.html' %}
-
-        <h1>Register</h1>
-        <form action="{% url 'finishsignup' %}" method="post">
-            {% csrf_token %}
-            <input type="text" placeholder="Username" name="username"/>
-            <input type="password" placeholder="Password" name="password"/>
-            <input type="submit"/>
-        </form>
-    </body>
+    <h1>Register</h1>
+    <form action="{% url 'finishsignup' %}" method="post">
+        {% csrf_token %}
+        <input type="text" placeholder="Username" name="username"/>
+        <input type="password" placeholder="Password" name="password"/>
+        <input type="submit"/>
+    </form>
+  </body>
 </html>

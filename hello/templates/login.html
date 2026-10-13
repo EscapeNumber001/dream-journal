@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 
-<html>
-    <body>
-        {% include 'navbar.html' %}
-        <h1>Login</h1>
-        <form action="{% url 'handle_login' %}" method="post">
-            <input type="text" name="username_input" placeholder="Username"/>
-            <input type="password" name="password_input" placeholder="Password"/>
-            <input type="submit"/>
-            {% csrf_token %}
-        </form>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+  </head>
+
+  <body> 
+    {% include 'navbar.html' %}
+    <h1>Login</h1>
+    <form action="{% url 'handle_login' %}" method="post">
+        <input type="text" name="username_input" placeholder="Username"/>
+        <input type="password" name="password_input" placeholder="Password"/>
+        <input type="submit"/>
+        {% csrf_token %}
+    </form>
+  </body>
 </html>

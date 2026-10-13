@@ -1,17 +1,19 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'styles.css' %}">
+<div id=navbar>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
 
-<a href="/"><img class="navbar-item" type="image/png" src="{% static 'images/favicon.png' %}" width="64px"></a>
-<aside id="secretwarning" hidden>Secret entry display enabled</aside><br/>
+  <a href="/"><img class="navbar-item" type="image/png" src="{% static 'images/favicon.png' %}" width="64px"></a>
+  <aside id="secretwarning" hidden>Secret entry display enabled</aside><br/>
 
-{% if not request.user.is_authenticated %}
-<a href="/login" class="navbar-item">Login</a>
-<a href="/signup" class="navbar-item">Sign Up</a>
-{% endif %}
+  {% if not request.user.is_authenticated %}
+  <a href="/login" class="navbar-item">Login</a>
+  <a href="/signup" class="navbar-item">Sign Up</a>
+  {% endif %}
 
-{% if request.user.is_authenticated %}
-<a class="navbar-item" href=/entry_add>Add Entry</a>
-<a class="navbar-item" href="/settings">Settings</a>
-<a class="navbar-item" href="/logout_page">Logout</a>
-<span class="navbar-item" style="color:white; text-shadow: none;">{{ request.user.username }}</span>
-{% endif %}<br/><br/>
+  {% if request.user.is_authenticated %}
+  <a class="navbar-item" href=/entry_add>Add Entry</a>
+  <a class="navbar-item" href="/settings">Settings</a>
+  <a class="navbar-item" href="/logout_page">Logout</a>
+  <span class="navbar-item" style="color:white; text-shadow: none;">{{ request.user.username }}</span>
+  {% endif %}<br/><br/>
+</div>
