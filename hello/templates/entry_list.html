@@ -20,7 +20,8 @@
       {% if not e.is_secret or secrets_enabled %}
         <div class=entry>
           <p>
-            <a href="entry/{{ e.pk }}"><h2>
+            <a href="entry/{{ e.pk }}">
+              <h2>
                 {% if e.is_secret %}
                     <small>🔐</small>
                 {% endif %}

@@ -30,9 +30,9 @@
       <footer id="entry_detail_footer">
           {% load tz %}
           {% localtime %}
-          <i style="color: palegreen">Written on {{ entry.creation_datetime }} {{ timezone }}</i>
+          <i style="color: palegreen">Written on {{ entry.creation_datetime }}</i>
           {% if entry.last_edit_datetime is not None %}
-              &nbsp; <i><small>Last edited on {{ entry.last_edit_datetime }} {{ timezone }}</i></small>
+              &nbsp; <i><small>Last edit: {{ entry.last_edit_datetime }}</i></small>
           {% endif %}
           {% endlocaltime %}
           <br/><br/><small><button id="editBtn">Edit Entry</a></small>

@@ -48,10 +48,9 @@ def errorpage(request, error_msg="An unidentified error occurred.", nextpage="/"
     return render(request, "error.html", {'errortext': error_msg, 'nextpage': nextpage}, status=status)
 
 
-
 # Views
 def home(request):
-    return render(request, "index.html")
+    return HttpResponseRedirect("entry_list")
 
 
 @login_required
@@ -88,7 +87,7 @@ def entry_list(request):
 
 @login_required
 def detail(request, req_pk):
-    entry = get_object_or_404(klass=Entry, pk=req_pk)
+    entry = get_object_or_404(Entry, pk=req_pk)
 
     if not _verify_entry_user(request, entry):
         return errorpage(request, "You are forbidden from viewing this page.", "/", status=403)
@@ -112,17 +111,17 @@ def entry_add(request):
             return HttpResponseRedirect(f"/entry/{pk}")
     else:
         form = AddOrEditEntryForm(initial={"creation_datetime": django.utils.timezone.now()})
-            
+
     return render(request=request, template_name="entry_add.html", context={"form": form})
 
 
 @login_required
 @require_POST
 def entry_delete(request, req_pk):
-    entry = get_object_or_404(klass=Entry, pk=req_pk)
+    entry = get_object_or_404(Entry, pk=req_pk)
     if not _verify_entry_user(request, entry):
         return errorpage(request, "You are forbidden from deleting this post.", "/", status=403)
-    
+  
     entry.delete()
     return HttpResponseRedirect("/")
 
@@ -150,6 +149,7 @@ def entry_edit(request, req_pk):
 
 def login_page(request):
     return render(request, "login.html")
+
 
 @require_POST
 def handle_login(request):
@@ -200,8 +200,6 @@ def applysettings(request):
                 e = Entry()
                 entrydata = myjs[key]
 
-                # FIXME: These should be casted to a datetime instead of remaining a str.
-                #        Raw str works for now but might cause weird issues with Django
                 e.creation_datetime = entrydata["creation_datetime"]
                 e.last_edit_datetime = entrydata["last_edit_datetime"] if entrydata["last_edit_datetime"] != "None" else None
 
@@ -223,7 +221,7 @@ def applysettings(request):
             x = Entry.objects.bulk_create(imported_entries)
             num_created = len(x)
 
-        print(f"[INFO][JSON_EntryImport] Successfully imported {num_created-1} entries from JSON.")
+        print(f"[INFO][JSON_EntryImport] Successfully imported {num_created} entries from JSON.")
     
     return HttpResponseRedirect("/")
 
@@ -245,6 +243,7 @@ def finishsignup(request):
     login(request, new_user)
     return HttpResponseRedirect("/")
 
+
 @login_required
 def dataexport(request):
     all_entries = Entry.objects.all().filter(owner__exact=request.user).order_by("creation_datetime")
@@ -263,8 +262,8 @@ def dataexport(request):
         entry_js["entry_title"] = entry.entry_title
         entry_js["entry_text"] = entry.entry_text
         entry_js["is_secret"] = entry.is_secret
-    
+
     outstr = json.dumps(root)
     response.content = outstr
-    
+
     return response
