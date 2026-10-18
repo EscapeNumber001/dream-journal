@@ -6,8 +6,32 @@ html {
 }
 
 body {
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 3.5%;
+    margin-right: 15%;
+}
+
+.entry {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    
+    p {
+        line-height: 1.5;
+        font-size: 13pt;
+        margin-top: 0px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        margin-bottom: 13px;
+    }
+}
+
+.blockedHiddenEntry {
+    color: gray
+}  
+
+#entry_detail_footer {
+    margin-top: -19px;
 }
 
 #homelink {

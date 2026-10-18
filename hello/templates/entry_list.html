@@ -28,16 +28,15 @@
             </h2></a>
             {% load markdown_wrapper %}
 
-            {{ e.entry_text|truncatechars_html:2000|markdown2html }}<br/>
+            {{ e.entry_text|truncatechars_html:2000|markdown2html }}
             <small>{{ e.creation_datetime }}</small>
           </p>
         </div>
       {% else %}
         <div class=blockedHiddenEntry>
-          <br/>
-          <h2 style="color: gray;">{{ e.entry_title }}</h2>
-          <p style="color: gray;"><i>Entry marked as secret. Go to Settings to enable viewing secret entries.</i></p>
-          <br/>
+          <h2>{{ e.entry_title }}</h2>
+          <p><i>Entry marked as secret. Go to Settings to enable viewing secret entries.</i></p>
+          <small>{{ e.creation_datetime }}</small>
         </div>
       {% endif %}
     {% endfor %}

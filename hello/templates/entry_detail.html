@@ -9,24 +9,25 @@
 
   <body> 
     {% include 'navbar.html' %}
-      <a href="/"><== Back</a>
-      <h1> 
-          {% if entry.is_secret %}
-              <small>🔐</small>
-          {% endif %}
-          {{ entry.entry_title }} 
-      </h1>
-      <p>
-          {% load markdown_wrapper %}
-          {{ entry.entry_text | markdown2html }}
-      </p>
+      <div class="entry">
+        <h1> 
+            {% if entry.is_secret %}
+                <small>🔐</small>
+            {% endif %}
+            {{ entry.entry_title }} 
+        </h1>
+        <p>
+            {% load markdown_wrapper %}
+            {{ entry.entry_text | markdown2html }}
+        </p>
 
-      <!-- Hidden delete form -->
-      <form id="deleteForm" method="post" action="{% url 'entry_delete' entry.pk %}" style="display:none;">
-          {% csrf_token %}
-      </form>
+        <!-- Hidden delete form -->
+        <form id="deleteForm" method="post" action="{% url 'entry_delete' entry.pk %}" style="display:none;">
+            {% csrf_token %}
+        </form>
+      </div>
 
-      <footer>
+      <footer id="entry_detail_footer">
           {% load tz %}
           {% localtime %}
           <i style="color: palegreen">Written on {{ entry.creation_datetime }} {{ timezone }}</i>
