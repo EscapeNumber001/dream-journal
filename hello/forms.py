@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 from .models import Entry
 
 SORTING_METHODS = {
@@ -19,7 +20,7 @@ class AddOrEditEntryForm(forms.ModelForm):
     entry_title = forms.CharField(label="", max_length=200, initial="Title")
     is_secret = forms.BooleanField(required=False)
     entry_text = forms.CharField(label="", widget=forms.Textarea)
-
+    creation_datetime = forms.DateTimeField(widget=forms.DateTimeInput(attrs={"type": "datetime-local"}, format="%Y-%m-%d %H:%M"))
 
 class EntrySearchForm(forms.Form):
     query_text = forms.CharField(label="Search...", required=False)
