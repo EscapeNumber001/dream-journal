@@ -36,7 +36,7 @@
       {% else %}
         <div class=blockedHiddenEntry>
           <h2>{{ e.entry_title }}</h2>
-          <p><i>Entry marked as secret. Go to Settings to enable viewing secret entries.</i></p>
+          <p><i>Entry marked as secret. <a href="entry/{{ e.pk }}">View contents</a></i></p>
           <small>{{ e.creation_datetime }}</small>
         </div>
       {% endif %}
