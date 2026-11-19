@@ -267,3 +267,9 @@ def dataexport(request):
     response.content = outstr
 
     return response
+
+
+@login_required
+def daily_cards(request):
+    entries = Entry.objects.all().filter(owner__exact=request.user).order_by("?")[0:3]
+    return render(request, "daily_cards.html", context={"daily_entries": entries})

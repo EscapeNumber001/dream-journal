@@ -19,4 +19,5 @@ urlpatterns = [
     path('finishsignup', views.finishsignup, name="finishsignup"),
 
     path('dataexport', views.dataexport, name="dataexport"),
+    path('daily_cards', views.daily_cards, name="daily_cards")
 ]
