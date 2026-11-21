@@ -82,7 +82,20 @@ def entry_list(request):
     p = Paginator(all_entries, 50)
     page_obj = p.get_page(page_num)
 
-    return render(request, "entry_list.html", {'all_entries': p.page(page_num), 'page_obj': page_obj, 'search_form': search_form, 'secrets_enabled': secret_entries_enabled} )
+    daily_entries = Entry.objects.filter(owner__exact=request.user)\
+        .order_by("?")[0:3]
+
+    return render(
+        request, 
+        "entry_list.html",
+        {
+            'all_entries': p.page(page_num), 
+            'page_obj': page_obj, 
+            'search_form': search_form, 
+            'secrets_enabled': secret_entries_enabled,
+            'daily_entries': daily_entries
+        }
+    )
 
 
 @login_required

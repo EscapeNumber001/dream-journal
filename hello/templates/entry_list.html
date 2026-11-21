@@ -5,16 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Entry List</title>
     {% load static %}
+    <link rel="stylesheet" href="{% static 'daily_cards.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" >   
   </head>
   
   <body>
     {% include 'navbar.html' %}
+    {% load markdown_wrapper %}
 
     <form action="{% url 'entry_list' %}" method="get" name="html_search_form">
         {{ search_form }}
         <input type="submit" style="margin-left:0px;">
     </form>
+
+    <div class="galleryDisplay">
+      {% for entry in daily_entries %}
+      <div class="galleryItem" onclick="galleryItemClicked(this, '{{ entry.entry_title }}', null)">
+        <p>
+          {{ entry.entry_text|markdown2html }}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div popover id="fullDisplayModal" class="modalAboutToShow">
+      <h1 id="fdmTitle"></h1>
+      <p id="fdmText"></p>
+      <a id="fdmGoToEntryLink" href="">Go to entry</a>
+    </div>
 
     {% for e in all_entries %}
       {% if not e.is_secret or secrets_enabled %}
@@ -27,7 +45,6 @@
                 {% endif %}
                 {{ e.entry_title }}
             </h2></a>
-            {% load markdown_wrapper %}
 
             {{ e.entry_text|truncatechars_html:2000|markdown2html }}
             <small>{{ e.creation_datetime }}</small>
@@ -36,7 +53,8 @@
       {% else %}
         <div class=blockedHiddenEntry>
           <h2>{{ e.entry_title }}</h2>
-          <p><i>Entry marked as secret. <a href="entry/{{ e.pk }}">View contents</a></i></p>
+          <p><i>Entry marked as secret. <a onclick="revealHiddenEntry('{{ e.pk }}'); this.parentElement.style.display = 'none';">View contents</a></i></p>
+          <p style="display:none;" id=hiddenEntry{{ e.pk }}>{{ e.entry_text }}</p>
           <small>{{ e.creation_datetime }}</small>
         </div>
       {% endif %}
@@ -55,5 +73,29 @@
             <a href="{% querystring page_num=page_obj.paginator.num_pages %}">Last</a>
         {% endif %}
     </div>
+
+    <script>
+      function galleryItemClicked(item, title, pk, ent_text) {
+        const fdm_title = document.getElementById("fdmTitle");
+        const fdm_text = document.getElementById("fdmText");
+        const fdm_gotoentry = document.getElementById("fdmGoToEntryLink");
+        const fdm = document.getElementById("fullDisplayModal");
+        fdm_title.setHTML(title);
+        fdm_text.setHTML(item.getHTML());
+        fdm_gotoentry.setAttribute("href", "entry/" + pk);
+        fdm.showPopover();
+      }
+
+      function revealHiddenEntry(pk) {
+        const hiddenEntryElement = document.getElementById("hiddenEntry" + pk);
+        const parentDiv = hiddenEntryElement.parentElement;
+        const titleElement = parentDiv.getElementsByTagName("h2")[0];
+        const titleString = titleElement.getHTML();
+        hiddenEntryElement.style.display = 'block';
+        parentDiv.classList.add("entry");
+        parentDiv.classList.remove("blockedHiddenEntry");
+        titleElement.setHTML("<a href='entry/" + pk + "'>" + titleString + "</a>");
+      }
+    </script>
   </body>
 </html>

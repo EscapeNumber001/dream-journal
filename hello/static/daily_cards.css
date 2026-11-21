@@ -1,7 +1,9 @@
 .galleryDisplay {
   display: flex;
   overflow-x: scroll;
+  overflow-y: clip;
   gap: 2%;
+  margin-top: 30px;
   filter: drop-shadow(hsl(271, 75%, 29%) 5px 5px 10px);
 }
 
@@ -11,7 +13,7 @@
     border-radius: 10px;
     padding-left: 20px;
     padding-right: 20px;
-    
+
     inline-size: 250px;
     height: 350px;
     vertical-align: top;
@@ -22,18 +24,15 @@
     background-color: whitesmoke;
     background-image: linear-gradient(to bottom, transparent 97%, darkgray), linear-gradient(to right, transparent 97%, darkgray);
 
-    overflow-y: none;
-    
-    p {
+    overflow-y: clip;
+
+    div {
        height: 90%;
        margin-left: 4%;
        margin-right: 7%;
        overflow-y: clip;
-       color: transparent;
-       background-image: linear-gradient(to bottom, black 90%, transparent 99%);
-       background-clip: text;
     }
-    
+
     transition: 0.25s ease-in-out;
     transition-property: scale background-color;
 }
@@ -43,7 +42,6 @@
     background-color: lavender;
 }
 
-
 #fullDisplayModal {
     color: inherit;
     line-height: 1.5;
@@ -51,11 +49,11 @@
     background-color: #302244;
     border: 3px solid slategray;
     border-radius: 10px;
-    
+
     width: 90%;
     height: 85%;
     filter: drop-shadow(darkslategray 0px 0px 15px);
-    
+
     overflow-x: clip;
     overflow-y: scroll;
 }
